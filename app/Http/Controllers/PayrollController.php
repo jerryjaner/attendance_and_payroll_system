@@ -768,7 +768,7 @@ class PayrollController extends Controller
                     else{
 
                          $payroll -> pag_ibig_deduction = 0.00;
-                         $payroll -> total_deduction =  $payroll -> philhealth_deduction + $payroll -> sss_deduction +  $payroll -> pag_ibig_deduction + $payroll -> +late_undertime + $payroll -> cash_advance + $payroll -> employee_absent;
+                         $payroll -> total_deduction =  $payroll -> philhealth_deduction + $payroll -> sss_deduction +  $payroll -> pag_ibig_deduction + $payroll -> late_undertime + $payroll -> cash_advance + $payroll -> employee_absent;
                          $payroll -> gov_contribution = $payroll -> philhealth_deduction + $payroll -> sss_deduction +  $payroll -> pag_ibig_deduction;
                          $payroll -> net_pay =   $payroll -> net_pay = $payroll -> gross - $payroll -> total_deduction;
                     }
