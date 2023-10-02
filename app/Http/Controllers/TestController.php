@@ -25,27 +25,27 @@ class TestController extends Controller
 
        
 
-     //  $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
-    //   $shed = Carbon::parse('21:00:00', 'GMT+8');
-    // $emp_sched = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $shed->format('H:i:s');
-    // return $emp_sched;
+      // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+      // $shed = Carbon::parse('21:00:00', 'GMT+8');
+      //  $emp_sched = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $shed->format('H:i:s');
+      // return $emp_sched;
        
-
-        $a = Carbon::parse('06:00:00'); //out sched
-        $b = Carbon::parse('2023-09-27 21:00:00'); // in
-        $interval = $b->diffInSeconds($a);
+        // return Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+        // $a = Carbon::parse('06:00:00'); //out sched
+        // $b = Carbon::parse('2023-09-27 21:00:00'); // in
+        // $interval = $b->diffInSeconds($a);
       
-      $interval -= 3600; // 3600 seconds = 1 hour
+        //  $interval -= 3600; // 3600 seconds = 1 hour
 
-// Check if the interval is negative and adjust it if necessary
-if ($interval < 0) {
-    $interval = 0; // Set to zero to avoid negative durations
-}
+        // // Check if the interval is negative and adjust it if necessary
+        // if ($interval < 0) {
+        //     $interval = 0; // Set to zero to avoid negative durations
+        // }
 
-// Format the interval as H:i:s
-$totalDuration = gmdate('H:i:s', $interval);
+        // // Format the interval as H:i:s
+        // $totalDuration = gmdate('H:i:s', $interval);
 
-return $totalDuration;
+        // return $totalDuration;
 
 
   //   $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
@@ -63,10 +63,10 @@ return $totalDuration;
 
 
 
-  //   $duration = Carbon::parse($totalDuration);
-  //   $out = Carbon::parse($total_time);
-  //   $totaltimeout = $out ->diffInSeconds($duration);
-  //  return $employee_total_work_hours = gmdate('H:i:s', $totaltimeout); //the total work hours
+    $duration = Carbon::parse('2023-09-28 21:00:00');
+    $out = Carbon::parse('2023-09-29 00:46:49');
+    $totaltimeout = $out ->diffInSeconds($duration);
+   return $employee_total_work_hours = gmdate('H:i:s', $totaltimeout); //the total work hours
 
     }
    
