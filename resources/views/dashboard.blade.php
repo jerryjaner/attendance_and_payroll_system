@@ -163,7 +163,7 @@
                         <div class="row section-container d-flex justify-content-center p-0 align-items-center" style="word-wrap: break-word;  border-radius: 10px; height:250px;">
                             <div class="col p-0" style="word-wrap: break-word;  overflow-y: auto; height:225px;">
 
-                                <div id="present_emp" class="row p-1 m-2 align-items-center justify-content-evenly" style="word-wrap: break-word;">
+                                <div id="present_emp" class="row p-1 m-2 align-items-center justify-content-around" style="word-wrap: break-word;">
                                     <div class="col d-flex justify-content-center align-items-center">
                                         <h1 class="text-center text-secondary my-5">No record present in the database!</h1>
                                     </div>
@@ -171,12 +171,35 @@
 
                             </div>
                         </div>
+                        {{-- <table class="table table-striped" style="color: white;">
+                            <thead>
+                                <tr>
+                                    <th>Profile Pic</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><img src="profile1.jpg" alt="Profile Pic" class="img-thumbnail"></td>
+                                    <td>John Doe</td>
+                                    <td>Marketing</td>
+                                </tr>
+                                <tr>
+                                    <td><img src="profile2.jpg" alt="Profile Pic" class="img-thumbnail"></td>
+                                    <td>Jane Smith</td>
+                                    <td>Finance</td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table> --}}
                     </div>
                     <div class="row d-flex justify-content-start pt-1">
                         <h5 class="emp-no" style="color:#fff;">Base on todays attendance ({{ date('l, F j, Y') }})</h5>
                     </div>
                 </div>
             </div>
+            
             <div class="col-xl-6">
                 <div class="col card employee-card d-flex m-2" style="background: linear-gradient(230deg, rgba(238,62,62,1) 0%, rgba(39,56,131,1) 100%);">
                     <div class="row d-flex justify-content-between mt-3">
@@ -489,6 +512,7 @@
             }
         });
 
+        //present_employee_table
         setInterval(function() {
             $.ajax({
                 url: '/employees3',
@@ -503,26 +527,42 @@
 
                         if(image11 !=  null)
                         {
-                            html2 +='<div class="card employee-card">' +
-                                '<div class="col d-flex justify-content-center align-items-center p-3">' +
-                                    '<div class="col d-flex justify-content-center p-1" >' +
+                            html2 +='<div class="card employee-card d-flex align-items-center">' +
+                                // '<div class="col d-flex justify-content-center align-items-center p-3">' +
+                                //     '<div class="col d-flex justify-content-center p-1" >' +
 
-                                        '<img src="storage/employee/images/'+image11+'" style="border-radius: 100%; border: 0.5px solid gray;  padding: 1px; width:40px; height: 40px;">' +
+                                //         '<img src="storage/employee/images/'+image11+'" style="border-radius: 100%; border: 0.5px solid gray;  padding: 1px; width:40px; height: 40px;">' +
 
-                                    '</div>' +
+                                //     '</div>' +
 
-                                    '<div class="col d-flex justify-content-start p-1 align-items-center" >' +
+                                //     '<div class="col d-flex justify-content-start p-1 align-items-center" >' +
 
-                                            '<p class="time">' + employee.employee.employee_name + '</p>' +
+                                //             '<p class="time">' + employee.employee.employee_name + '</p>' +
 
-                                    '</div>' +
+                                //     '</div>' +
 
-                                    '<div class="col d-flex justify-content-start p-1 align-items-center">' +
+                                //     '<div class="col d-flex justify-content-start p-1 align-items-center">' +
 
-                                        '<p class="time" style="color:#bc3d4f;">' + employee.employee.employee_department + '</p>' +
+                                //         '<p class="time" style="color:#bc3d4f;">' + employee.employee.employee_department + '</p>' +
 
-                                    '</div>' +
-                                '</div>'+
+                                //     '</div>' +
+                                // '</div>'+
+                                '<table class="table">'+
+                            // '<thead>'+
+                            //     '<tr>'+
+                            //         '<th>' + 'Profile Pic' + '</th>'+
+                            //         '<th>' + 'Name' + '</th>'+
+                            //         '<th>' + 'Department' + '</th>'+
+                            //     '</tr>'+
+                            // '</thead>'+
+                            '<tbody>'+
+                                '<tr class="d-flex justify-content-around align-items-center ">'+
+                                    '<td>'+ '<img src="storage/employee/images/'+ image11 +'" style="border-radius: 100%; border: 0.5px solid gray;  padding: 1px; width:40px; height: 40px;">' + '</td>'+
+                                    '<td>' + employee.employee.employee_name + '</td>'+
+                                    '<td>' + employee.employee.employee_department + '</td>'+
+                                '</tr>'+
+                            '</tbody>'+
+                        '</table>'+
                             '</div>';
                         }
                         else
@@ -568,6 +608,7 @@
             }
         });
 
+        //late_employee_table
         setInterval(function() {
             $.ajax({
                 url: '/employees4',
@@ -583,8 +624,8 @@
                         if(image11 !=  null)
                         {
                             html3 +='<div class="card employee-card">' +
-                                '<div class="col d-flex justify-content-center align-items-center p-3">' +
-                                    '<div class="col d-flex justify-content-center p-1" >' +
+                                '<div class="col d-flex justify-content-around align-items-center p-3">' +
+                                    '<div class="col d-flex justify-content-start p-1" >' +
 
                                         '<img src="storage/employee/images/'+image11+'" style="border-radius: 100%; border: 0.5px solid gray;  padding: 1px; width:40px; height: 40px;">' +
 
@@ -596,7 +637,7 @@
 
                                     '</div>' +
 
-                                    '<div class="col d-flex justify-content-start p-1 align-items-center">' +
+                                    '<div class="col d-flex justify-content-end p-1 align-items-center">' +
 
                                         '<p class="time" style="color:#bc3d4f;">' + late_emp.employee.employee_department + '</p>' +
 
