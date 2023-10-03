@@ -1004,7 +1004,7 @@ class AttendanceController extends Controller
                                             }
                                             else//UNDERTIME without OT
                                             {
-                                                $timee = Carbon::createFromTime(9, 00, 00, 'GMT+8');
+                                                $timee = Carbon::createFromTime(13, 00, 00, 'GMT+8');
                                                 $timeOUT = Carbon::parse($timee)->format('H:i:s');//declared and for testing or debugging only
 
                                                 $timeee = Carbon::now('GMT+8')->format('H:i:s');
