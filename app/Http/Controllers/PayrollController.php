@@ -21,7 +21,8 @@ class PayrollController extends Controller
     public function index()
     {
 
-        if(Auth::user()->hasRole(['accounting','HR','assistantHR','CEO'])){
+        if(Auth::user()->hasRole(['accounting','HR','assistantHR','CEO']))
+        {
 
             $employees = Employee::get(['employee_name','id']);
             return view('payroll.index', compact('employees'));

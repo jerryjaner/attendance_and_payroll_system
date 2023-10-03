@@ -1784,8 +1784,6 @@ class AttendanceController extends Controller
                                         else
                                         {
 
-                                          
-
                                             if($data -> overtime -> isApproved_HR == '0')
                                             {
 
@@ -1868,165 +1866,230 @@ class AttendanceController extends Controller
                                                 }
                                                 else
                                                 {
-                                                    
-                                                    if($data -> time_out < $data -> employee -> sched_end){
-                                                        //dine na ma code buwas an para sa undertime
 
+                                                    if($data -> emp_no == $request -> scanned && $data -> date == Carbon::now('GMT+8')->subDay(1)->format('Y-m-d') && $data -> time_out === null){
 
-                                                              dd('a');
-                                                        
-                                                      
-                                                    }
-
-                                                    dd('b');
-                                                   
-                                                     //FOR THE WORK HOURS
-                                                    $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
-                                                    $startTime = Carbon::parse($data -> night_shift_date);
-                                                    $interval = $startTime->diffInSeconds($endTime);
-                                                    $totalDuration = gmdate('H:i:s', $interval);
-
-                                                    
-
-                                                    //NIGHT DIFFERENTIAL HOURS
-                                                     $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
-                                                     $end = Carbon::now('GMT+8')->addDays(1)->subHour(1)->format('Y-m-d H:i:s');
-                                                     $diff = $start ->diffInSeconds($end);
-                                                     $night_diff_total_hours =  gmdate('H:i:s', $diff);
-
-
-                                                     //UPDATE THE ATTENDANCE
-                                                    Attendance::where('emp_no', '=', $request -> scanned)
-                                                              ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
-                                                              ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
-                                                                        'night_diff_hours' => $night_diff_total_hours,
-                                                                        'work_hours' => $totalDuration]);
-
-
-                                                        // dd('nagupdate na');
-
-                                                      // $night_break_time = Carbon::createFromTime(01, 00, 00, 'GMT+8')->format('H:i:s');
-                                                      // $night_shift_break_time = Carbon::parse($night_break_time)->format('H:i:s');
-
-
-                                                      // $night_break_time1 = Carbon::createFromTime(24, 00, 00, 'GMT+8')->format('H:i:s');
-                                                      // $twelve_am = Carbon::parse($night_break_time1)->format('H:i:s');
-
-                                                       $scanned_attendances = Attendance::where('emp_no', '=', $request -> scanned)
-                                                                                       ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
-                                                                                       ->with('employee')
-                                                                                       ->get();
-
-                                                        foreach ($scanned_attendances as  $scanned_attendance) {
-
-                                                            if($scanned_attendance->time_out < $scanned_attendance ->employee->sched_end )
+                                                        if(Carbon::now('GMT+8')->format('H:i:s') < $data ->employee->sched_end )
+                                                        {
+                                                            if(Carbon::now('GMT+8')->format('H:i:s') > $data -> employee -> breaktime_start && Carbon::now('GMT+8')->format('H:i:s') > $data -> employee -> breaktime_end )
                                                             {
 
-                                                                if($scanned_attendance -> time_out > $scanned_attendance -> employee -> breaktime_start && $scanned_attendance -> time_out > $scanned_attendance -> employee -> breaktime_end ){
+                                                               $emp_sched_out = Carbon::parse($data ->employee-> sched_end)->addDay(1);
+                                                               $out_today =Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                                               $sum = $emp_sched_out -> diffInSeconds($out_today);
+                                                               $undertime = gmdate('H:i:s', $sum);
 
-                                                                        $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
+                                                                $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
+                                                                $startTime = Carbon::parse($data -> night_shift_date);
+                                                                $interval = $startTime->diffInSeconds($endTime);
+                                                                $totalDuration = gmdate('H:i:s', $interval);
+
+                                                                
+
+                                                                //NIGHT DIFFERENTIAL HOURS
+                                                                 $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                                                 $end = Carbon::now('GMT+8')->addDays(1)->subHour(1)->format('Y-m-d H:i:s');
+                                                                 $diff = $start ->diffInSeconds($end);
+                                                                 $night_diff_total_hours =  gmdate('H:i:s', $diff);
+
+
+                                                                 //UPDATE THE ATTENDANCE
+                                                                Attendance::where('emp_no', '=', $request -> scanned)
+                                                                          ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                                          ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
+                                                                                    'night_diff_hours' => $night_diff_total_hours,
+                                                                                    'undertime_hours' => $undertime,
+                                                                                    'work_hours' => $totalDuration]);
+
+                                                                return response()->json([
+                                                                                        'status' => 200,
+                                                                                        'msg' => 'Attendance updated Successfully',
+                                                                                    ]);
+
+
+                                                            }
+                                                            else if(Carbon::now('GMT+8')->format('H:i:s') < $data -> employee -> breaktime_start )
+                                                            {
+                                                              //   dd('a');
+                                                                       //undertime
+                                                                        $emp_sched_out = Carbon::parse($data ->employee-> sched_end)->addDay(1)->subHour(1);
+                                                                        $out_today =Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                                                        $sum = $emp_sched_out -> diffInSeconds($out_today);
+                                                                        $undertime = gmdate('H:i:s', $sum);
+
+                                                                      //FOR THE WORK HOURS
+                                                                        $endTime = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
                                                                         $startTime = Carbon::parse($data -> night_shift_date);
                                                                         $interval = $startTime->diffInSeconds($endTime);
                                                                         $totalDuration = gmdate('H:i:s', $interval);
 
-                                                                        
+                                                                       //NIGHT DIFFERENTIAL HOURS
+                                                                        $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                                                        $end = Carbon::now('GMT+8')->addDays(1)->format('Y-m-d H:i:s');
+                                                                        $diff = $start ->diffInSeconds($end);
+                                                                        $night_diff_total_hours =  gmdate('H:i:s', $diff);
 
-                                                                        //NIGHT DIFFERENTIAL HOURS
-                                                                         $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
-                                                                         $end = Carbon::now('GMT+8')->addDays(1)->subHour(1)->format('Y-m-d H:i:s');
-                                                                         $diff = $start ->diffInSeconds($end);
-                                                                         $night_diff_total_hours =  gmdate('H:i:s', $diff);
+                                                                       
 
-                                                                    $emp_sched_out = Carbon::parse($scanned_attendance ->employee-> sched_end);
-                                                                    $out_today =Carbon::parse($scanned_attendance->time_out);
-                                                                    $sum = $emp_sched_out -> diffInSeconds($out_today);
-
-                                                                    $undertime = gmdate('H:i:s', $sum);
 
                                                                    Attendance::where('emp_no', '=', $request -> scanned)
                                                                               ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
-                                                                              ->update(['undertime_hours' => $undertime ]);
+                                                                              ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
+                                                                                        'night_diff_hours' => $night_diff_total_hours,
+                                                                                        'work_hours' => $totalDuration,
+                                                                                        'undertime_hours' => $undertime ]);
                                                                                             
 
                                                                     return response()->json([
                                                                         'status' => 200,
                                                                         'msg' => 'Attendance updated Successfully',
                                                                     ]);
-
-
-                                                                }
-                                                                // else if($scanned_attendance -> time_out  > $twelve_am){
-
-
-                                                                //     $emp_sched_out = Carbon::parse($scanned_attendance ->employee-> sched_end);
-                                                                //     $out_today =Carbon::parse($scanned_attendance->time_out);
-                                                                //     $sum = $emp_sched_out -> diffInSeconds($out_today);
-
-                                                                //      $undertime = gmdate('H:i:s', $sum);
-
-                                                                //    Attendance::where('emp_no', '=', $request -> scanned)
-                                                                //               ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
-                                                                //               ->update(['undertime_hours' => $undertime ]);
-                                                                                            
-
-                                                                //     return response()->json([
-                                                                //         'status' => 200,
-                                                                //         'msg' => 'Attendance updated Successfully',
-                                                                //     ]);
-
-                                                                // }
-                                                             
-                                                                    
-
-                                                                   
                                                             }
                                                             else
                                                             {
-                                                              
+
+
+                                                                $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
+                                                                $startTime = Carbon::parse($data -> night_shift_date);
+                                                                $interval = $startTime->diffInSeconds($endTime);
+                                                                $totalDuration = gmdate('H:i:s', $interval);
+
+                                                                
+
+                                                                //NIGHT DIFFERENTIAL HOURS
+                                                                 $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                                                 $end = Carbon::now('GMT+8')->addDays(1)->subHour(1)->format('Y-m-d H:i:s');
+                                                                 $diff = $start ->diffInSeconds($end);
+                                                                 $night_diff_total_hours =  gmdate('H:i:s', $diff);
+
+
+                                                                 //UPDATE THE ATTENDANCE
+                                                                Attendance::where('emp_no', '=', $request -> scanned)
+                                                                          ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                                          ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
+                                                                                    'night_diff_hours' => $night_diff_total_hours,
+                                                                                    'work_hours' => $totalDuration]);
 
                                                                  return response()->json([
-                                                                    'status' => 200,
-                                                                    'msg' => 'Attendance updated Successfully',
-                                                                ]);
+                                                                        'status' => 200,
+                                                                        'msg' => 'Attendance updated Successfully',
+                                                                    ]);
+                                                     
 
                                                             }
+
+
                                                         }
 
+                                                    }
+                                                    dd('error');
+                                                   //   //FOR THE WORK HOURS
+                                                   //  $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
+                                                   //  $startTime = Carbon::parse($data -> night_shift_date);
+                                                   //  $interval = $startTime->diffInSeconds($endTime);
+                                                   //  $totalDuration = gmdate('H:i:s', $interval);
+
+                                                    
+
+                                                   //  //NIGHT DIFFERENTIAL HOURS
+                                                   //   $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                                   //   $end = Carbon::now('GMT+8')->addDays(1)->subHour(1)->format('Y-m-d H:i:s');
+                                                   //   $diff = $start ->diffInSeconds($end);
+                                                   //   $night_diff_total_hours =  gmdate('H:i:s', $diff);
 
 
-
-                                                        //  
-
-
-                                                        dd('lagpas');
-
-                                                        // //work hours
-                                                        // $endTime = Carbon::now('GMT+8')->subHour(1)->format('Y-m-d H:i:s');
-                                                        // $startTime = Carbon::parse($data -> night_shift_date);
-                                                        // $interval = $startTime->diffInSeconds($endTime);
-                                                        // dd($totalworkhours = gmdate('H:i:s', $interval));
+                                                   //   //UPDATE THE ATTENDANCE
+                                                   //  Attendance::where('emp_no', '=', $request -> scanned)
+                                                   //            ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                   //            ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
+                                                   //                      'night_diff_hours' => $night_diff_total_hours,
+                                                   //                      'work_hours' => $totalDuration]);
 
 
+                                                    
 
-                                                        // //NIGHT DIFFERENTIAL HOURS
-                                                        // $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
-                                                        // $end = Carbon::now('GMT+8')->format('H:00:00');
-                                                        // $diff = $start ->diffInSeconds($end);
-                                                        // $night_diff_total_hours =  gmdate('H:i:s', $diff);
+                                                   // $scanned_attendances = Attendance::where('emp_no', '=', $request -> scanned)
+                                                   //                                 ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                   //                                 ->with('employee')
+                                                   //                                 ->get();
 
-                                                        // Attendance::where('emp_no', '=', $request -> scanned)
-                                                        //                   ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
-                                                        //                   ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
-                                                        //                             'night_diff_hours' => $night_diff_total_hours,
-                                                        //                             'work_hours' => $totalworkhours]);
+                                                        // foreach ($scanned_attendances as  $scanned_attendance) {
 
-                                                       
-                                                      
-                                                        // return response()->json([
-                                                        //     'status' => 200,
-                                                        //     'msg' => 'Attendance updated Successfully',
-                                                        // ]);
+                                                        //     if($scanned_attendance->time_out < $scanned_attendance ->employee->sched_end )
+                                                        //     {
 
+                                                        //         if($scanned_attendance -> time_out > $scanned_attendance -> employee -> breaktime_start && $scanned_attendance -> time_out > $scanned_attendance -> employee -> breaktime_end )
+                                                        //         {
+
+                                                        //                 $emp_sched_out = Carbon::parse($scanned_attendance ->employee-> sched_end);
+                                                        //                 $out_today =Carbon::parse($scanned_attendance->time_out);
+                                                        //                 $sum = $emp_sched_out -> diffInSeconds($out_today);
+
+                                                        //                 $undertime = gmdate('H:i:s', $sum);
+
+                                                        //            Attendance::where('emp_no', '=', $request -> scanned)
+                                                        //                       ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                        //                       ->update(['undertime_hours' => $undertime ]);
+                                                                                            
+
+                                                        //             return response()->json([
+                                                        //                 'status' => 200,
+                                                        //                 'msg' => 'Attendance updated Successfully',
+                                                        //             ]);
+
+
+                                                        //         } 
+                                                        //         else if($scanned_attendance -> time_out < $scanned_attendance -> employee -> breaktime_start)
+                                                        //         {
+
+                                                        //                   //FOR THE WORK HOURS
+                                                        //                 $endTime = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                                        //                 $startTime = Carbon::parse($data -> night_shift_date);
+                                                        //                 $interval = $startTime->diffInSeconds($endTime);
+                                                        //                 $totalDuration = gmdate('H:i:s', $interval);
+
+                                                        //                //NIGHT DIFFERENTIAL HOURS
+                                                        //                 $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                                        //                 $end = Carbon::now('GMT+8')->addDays(1)->format('Y-m-d H:i:s');
+                                                        //                 $diff = $start ->diffInSeconds($end);
+                                                        //                 $night_diff_total_hours =  gmdate('H:i:s', $diff);
+
+                                                        //                 //undertime
+                                                        //                 $emp_sched_out = Carbon::parse($scanned_attendance ->employee-> sched_end)->subHour(1);
+                                                        //                 $out_today =Carbon::parse($scanned_attendance->time_out);
+                                                        //                 $sum = $emp_sched_out -> diffInSeconds($out_today);
+                                                        //                 $undertime = gmdate('H:i:s', $sum);
+
+
+                                                        //            Attendance::where('emp_no', '=', $request -> scanned)
+                                                        //                       ->where('date', '=', Carbon::now('GMT+8')->subDays(1)->format('Y-m-d'))
+                                                        //                       ->update(['night_diff_hours' => $night_diff_total_hours,
+                                                        //                                 'work_hours' => $totalDuration,
+                                                        //                                 'undertime_hours' => $undertime ]);
+                                                                                            
+
+                                                        //             return response()->json([
+                                                        //                 'status' => 200,
+                                                        //                 'msg' => 'Attendance updated Successfully',
+                                                        //             ]);
+                                                        //         }
+                                                                
+                                                                    
+
+                                                                   
+                                                        //     }
+                                                        //     else
+                                                        //     {
+                                                              
+
+                                                        //          return response()->json([
+                                                        //             'status' => 200,
+                                                        //             'msg' => 'Attendance updated Successfully',
+                                                        //         ]);
+
+                                                        //     }
+                                                        // }
+     
                                                 }
                                             }
                                         }
@@ -2037,13 +2100,52 @@ class AttendanceController extends Controller
                                 else if($data -> emp_no == $request -> scanned && $data -> date == Carbon::now('GMT+8')->format('Y-m-d') && $data -> time_out === null){
 
                                    
-                                    //FOR UNDERTIME IN TODAYS DATE 
-                                    dd('kiw');
+                                  // IF THE EMPLOYEE TIME OUT / UNDERTIME WITH THE SAME DATE
+
+                                   $emp_sched_out = Carbon::parse($data ->employee-> sched_end)->subHour(1)->addDay(1);
+                                   $out_today =Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                   $sum = $emp_sched_out -> diffInSeconds($out_today);
+                                   $undertime = gmdate('H:i:s', $sum);
+
+                                    //FOR THE WORK HOURS
+                                    $endTime = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                    $startTime = Carbon::parse($data -> night_shift_date);
+                                    $interval = $startTime->diffInSeconds($endTime);
+                                    $totalDuration = gmdate('H:i:s', $interval);
+
+                                    
+
+                                    //NIGHT DIFFERENTIAL HOURS
+                                     $start = Carbon::createFromFormat('H:i:s', '22:00:00'); //10pm
+                                     $end = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                     $diff = $start ->diffInSeconds($end);
+                                     $night_diff_total_hours =  gmdate('H:i:s', $diff);
+
+
+                                     //UPDATE THE ATTENDANCE
+                                      Attendance::where('emp_no', '=', $request -> scanned)
+                                                  ->where('date', '=', Carbon::now('GMT+8')->format('Y-m-d'))
+                                                  ->update(['time_out' => Carbon::now('GMT+8')->format('H:i:s'),
+                                                            'night_diff_hours' => $night_diff_total_hours,
+                                                            'undertime_hours' => $undertime,
+                                                            'work_hours' => $totalDuration]);
+
+                                          
+
+
+                                    return response()->json([
+                                        'status' => 200,
+                                        'msg' => 'Attendance updated Successfully',
+                                    ]);
+                                   
+
                                 }
+
                                 else{
 
-                                      dd('insert 1 ');
-
+                                    //  dd('insert 1 ');
+                                        //IF THE EMPLOYEE COMPLETE TIME IN AND OUT 
+                                        //ATTENDANCE AGAIN IN THE SAME DAY WHICH IS FOR NIGHT SHIFT ONLY
                                         if($data -> emp_no == $request -> scanned && $data -> date == Carbon::now('GMT+8')->subDay(1)->format('Y-m-d') && $data -> time_out != null){
 
                                             // dd('test');
@@ -2068,23 +2170,6 @@ class AttendanceController extends Controller
 
                                                             if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') < $sched -> sched_start){
 
-
-                                                                // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
-                                                                // $emp_sched = Carbon::parse($sched -> sched_start);
-                                                                // $interval = $emp_sched->diffInSeconds($datetimetoday);
-                                                                // $total = gmdate('H:i:s', $interval); //minus
-
-                                                                // $time2 = Carbon::parse($total);
-                                                                // $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
-                                                                // $convert = Carbon::parse($datetimenow);
-
-                                                                // //add the subtrcated hour or minus to the current time and date
-                                                                // $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
-                                                                //                 ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
-                                                                //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
-
-                                                                // $sum->format('Y-m-d H:i:s');
-
                                                                 $emp_sched = Carbon::parse($sched -> sched_start);
                                                                 $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
@@ -2097,13 +2182,12 @@ class AttendanceController extends Controller
                                                                 $employee_attendance -> RDRHND = true;
                                                                 $employee_attendance -> save();
 
-
-
                                                                 return response()->json([
 
                                                                     'status' => 200,
                                                                     'msg' => 'Attendance Recorded Successfully',
                                                                 ]);
+
                                                             }
                                                             else if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') > $sched -> sched_start){
 
@@ -2229,28 +2313,30 @@ class AttendanceController extends Controller
                                                             if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') < $sched -> sched_start){
 
 
-                                                                $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                                                // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                                                // $emp_sched = Carbon::parse($sched -> sched_start);
+                                                                // $interval = $emp_sched->diffInSeconds($datetimetoday);
+                                                                // $total = gmdate('H:i:s', $interval); //minus
+
+                                                                // $time2 = Carbon::parse($total);
+                                                                // $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
+                                                                // $convert = Carbon::parse($datetimenow);
+
+                                                                // //add the subtrcated hour or minus to the current time and date
+                                                                // $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
+                                                                //                 ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
+                                                                //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
+
+                                                                // $sum->format('Y-m-d H:i:s');
                                                                 $emp_sched = Carbon::parse($sched -> sched_start);
-                                                                $interval = $emp_sched->diffInSeconds($datetimetoday);
-                                                                $total = gmdate('H:i:s', $interval); //minus
-
-                                                                $time2 = Carbon::parse($total);
-                                                                $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
-                                                                $convert = Carbon::parse($datetimenow);
-
-                                                                //add the subtrcated hour or minus to the current time and date
-                                                                $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
-                                                                                ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
-                                                                                ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
-
-                                                                $sum->format('Y-m-d H:i:s');
+                                                                $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
 
                                                                 $employee_attendance = new Attendance();
                                                                 $employee_attendance -> emp_no = $request -> scanned;
                                                                 $employee_attendance -> time_in = $sched -> sched_start;
                                                                 $employee_attendance -> date = Carbon::now('GMT+8')->format('Y-m-d');
-                                                                $employee_attendance -> night_shift_date = $sum;
+                                                                $employee_attendance -> night_shift_date = $nightshift_date_less_than_sched_start;
                                                                 $employee_attendance -> RDSHND = true;
                                                                 $employee_attendance -> save();
 
@@ -2324,13 +2410,14 @@ class AttendanceController extends Controller
                                                                     //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
 
                                                                     // $sum->format('Y-m-d H:i:s');
-
+                                                                    $emp_sched = Carbon::parse($sched -> sched_start);
+                                                                    $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
                                                                     $employee_attendance = new Attendance();
                                                                     $employee_attendance -> emp_no = $request -> scanned;
                                                                     $employee_attendance -> time_in = $sched -> sched_start;
                                                                     $employee_attendance -> date = Carbon::now('GMT+8')->format('Y-m-d');
-                                                                    $employee_attendance -> night_shift_date = $sum;
+                                                                    $employee_attendance -> night_shift_date = $nightshift_date_less_than_sched_start;
                                                                     $employee_attendance -> SHND = true;
                                                                     $employee_attendance -> save();
 
@@ -2391,21 +2478,7 @@ class AttendanceController extends Controller
                                                     if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') < $sched -> sched_start){
 
 
-                                                        // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
-                                                        // $emp_sched = Carbon::parse($sched -> sched_start);
-                                                        // $interval = $emp_sched->diffInSeconds($datetimetoday);
-                                                        // $total = gmdate('H:i:s', $interval); //minus
-
-                                                        // $time2 = Carbon::parse($total);
-                                                        // $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
-                                                        // $convert = Carbon::parse($datetimenow);
-
-                                                        // //add the subtrcated hour or minus to the current time and date
-                                                        // $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
-                                                        //                 ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
-                                                        //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
-
-                                                        // $sum->format('Y-m-d H:i:s');
+                                                    
                                                         $emp_sched = Carbon::parse($sched -> sched_start);
                                                         $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
@@ -2549,10 +2622,12 @@ class AttendanceController extends Controller
                                 }
                           
 
-                            //}
+                          
                         }
 
-                      dd('insert 2');
+                     // dd('insert 2');
+
+                        //FOR THE INSERT OF THE ATTENDANCE OF EMPLOYEE
                         foreach($schedules as $sched){
 
                             foreach ($holidays as $holiday) {
@@ -2570,21 +2645,7 @@ class AttendanceController extends Controller
                                         if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') < $sched -> sched_start){
 
 
-                                            // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
-                                            // $emp_sched = Carbon::parse($sched -> sched_start);
-                                            // $interval = $emp_sched->diffInSeconds($datetimetoday);
-                                            // $total = gmdate('H:i:s', $interval); //minus
-
-                                            // $time2 = Carbon::parse($total);
-                                            // $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
-                                            // $convert = Carbon::parse($datetimenow);
-
-                                            // //add the subtrcated hour or minus to the current time and date
-                                            // $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
-                                            //                 ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
-                                            //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
-
-                                            // $sum->format('Y-m-d H:i:s');
+                                         
 
                                             $emp_sched = Carbon::parse($sched -> sched_start);
                                             $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
@@ -2730,28 +2791,31 @@ class AttendanceController extends Controller
                                         if($request -> scanned == $sched -> employee_no && Carbon::now('GMT+8')->format('H:i') < $sched -> sched_start){
 
 
-                                            $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
-                                            $emp_sched = Carbon::parse($sched -> sched_start);
-                                            $interval = $emp_sched->diffInSeconds($datetimetoday);
-                                            $total = gmdate('H:i:s', $interval); //minus
+                                            // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
+                                            // $emp_sched = Carbon::parse($sched -> sched_start);
+                                            // $interval = $emp_sched->diffInSeconds($datetimetoday);
+                                            // $total = gmdate('H:i:s', $interval); //minus
 
-                                            $time2 = Carbon::parse($total);
-                                            $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
-                                            $convert = Carbon::parse($datetimenow);
+                                            // $time2 = Carbon::parse($total);
+                                            // $datetimenow = Carbon::now('GMT+8')->format('Y-m-d H:i:s'); //carbon now
+                                            // $convert = Carbon::parse($datetimenow);
 
-                                            //add the subtrcated hour or minus to the current time and date
-                                            $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
-                                                            ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
-                                                            ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
+                                            // //add the subtrcated hour or minus to the current time and date
+                                            // $sum = $convert->add($time2->diffInHours('00:00:00'), 'hours')
+                                            //                 ->add($time2->diffInMinutes('00:00:00') % 60, 'minutes')
+                                            //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
 
-                                            $sum->format('Y-m-d H:i:s');
+                                            // $sum->format('Y-m-d H:i:s');
 
+
+                                             $emp_sched = Carbon::parse($sched -> sched_start);
+                                             $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
                                             $employee_attendance = new Attendance();
                                             $employee_attendance -> emp_no = $request -> scanned;
                                             $employee_attendance -> time_in = $sched -> sched_start;
                                             $employee_attendance -> date = Carbon::now('GMT+8')->format('Y-m-d');
-                                            $employee_attendance -> night_shift_date = $sum;
+                                            $employee_attendance -> night_shift_date = $nightshift_date_less_than_sched_start;
                                             $employee_attendance -> RDSHND = true;
                                             $employee_attendance -> save();
 
@@ -2825,13 +2889,15 @@ class AttendanceController extends Controller
                                                 //                 ->add($time2->diffInSeconds('00:00:00') % 60, 'seconds');
 
                                                 // $sum->format('Y-m-d H:i:s');
+                                                $emp_sched = Carbon::parse($sched -> sched_start);
+                                                $nightshift_date_less_than_sched_start = Carbon::now('GMT+8')->format('Y-m-d') . ' ' . $emp_sched->format('H:i:s');
 
 
                                                 $employee_attendance = new Attendance();
                                                 $employee_attendance -> emp_no = $request -> scanned;
                                                 $employee_attendance -> time_in = $sched -> sched_start;
                                                 $employee_attendance -> date = Carbon::now('GMT+8')->format('Y-m-d');
-                                                $employee_attendance -> night_shift_date = $sum;
+                                                $employee_attendance -> night_shift_date = $nightshift_date_less_than_sched_start;
                                                 $employee_attendance -> SHND = true;
                                                 $employee_attendance -> save();
 
