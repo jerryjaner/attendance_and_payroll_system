@@ -451,7 +451,7 @@ class AttendanceController extends Controller
                                         //START OF UNDERTIME
 
                                         $timee = Carbon::createFromTime(18, 00, 00, 'GMT+8');
-                                        $timeOUT = Carbon::parse($timee)->format('H:i:s');//declared and for testing or debugging only
+                                        $timeOUT = Carbon::parse($timee)->format('H:i:s');//declared timeout for testing or debugging only
 
                                         $timeee = Carbon::now('GMT+8')->format('H:i:s');
                                         $timeOUT111 = Carbon::parse($timeee)->format('H:i:s');//realtime used in timeout
@@ -476,7 +476,8 @@ class AttendanceController extends Controller
                                             if($attends->time_out < $attends->employee->sched_end && $attends->time_out > $attends->time_in)
                                             {
 
-                                                $PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                //$PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                $PMtime = Carbon::parse($attends ->employee-> breaktime_start); //breaktime from employee database
                                                 $breakTime = Carbon::parse($PMtime)->format('H:i:s');
 
                                                 if($attends->time_out <= $breakTime)//if timeout is less than breaktime (nag out dire pa breaktime)
@@ -640,7 +641,8 @@ class AttendanceController extends Controller
                                                 }
                                                 //Overtime::where('emp_number', '=', $request -> scanned)->where('attendance_id', '=', $data -> id)->update(['hours_OT' => $total_overtime]);
 
-                                                $PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                //$PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                $PMtime = Carbon::parse($attends ->employee-> breaktime_start); //breaktime from employee database
                                                 $breakTime1 = Carbon::parse($PMtime)->format('H:i:s');
 
                                                 if($attends->time_in < $breakTime1)
@@ -838,7 +840,8 @@ class AttendanceController extends Controller
 
                                                    
 
-                                                    $PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                    //$PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                    $PMtime = Carbon::parse($attends ->employee-> breaktime_start); //breaktime from employee database
                                                     $breakTime = Carbon::parse($PMtime)->format('H:i:s');
 
                                                     if($attends->time_out <= $breakTime)//if timeout is less than breaktime (nag out dire pa breaktime)
@@ -1022,7 +1025,8 @@ class AttendanceController extends Controller
                                                     if($attends->time_out < $attends->employee->sched_end && $attends->time_out > $attends->time_in)////////////////IF UNDERTIME IS TRUE (NAG OUT NG MAAGA)
                                                     {
 
-                                                        $PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                        //$PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                        $PMtime = Carbon::parse($attends ->employee-> breaktime_start); //breaktime from employee database
                                                         $breakTime = Carbon::parse($PMtime)->format('H:i:s');
 
                                                         if($attends->time_out <= $breakTime)//if timeout is less than breaktime (nag out dire pa breaktime)
@@ -1117,7 +1121,8 @@ class AttendanceController extends Controller
                                                     }
                                                     else
                                                     {
-                                                        $PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                        //$PMtime = Carbon::createFromTime(12, 00, 00, 'GMT+8')->format('H:i:s');//declared breaktime
+                                                        $PMtime = Carbon::parse($attends ->employee-> breaktime_start); //breaktime from employee database
                                                         $breakTime1 = Carbon::parse($PMtime)->format('H:i:s');
 
                                                         if($attends->time_in < $breakTime1)
