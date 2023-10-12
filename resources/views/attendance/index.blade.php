@@ -266,7 +266,7 @@
 
                                             <tbody>
 
-                                                @foreach($employee as $emp)
+                                                @foreach($allReq as $emp)
 
                                                 <tr>
                                                     <td>
@@ -361,11 +361,19 @@
                                             <div class="form-row row">
                                                 <div class="col-xl-12">
                                                     <label for="txt-time">Status:</label><br>
-                                                    <input type="radio"  name="status" value="absent"> Absent
+                                                    <input type="radio"  name="status" value="absent"> Absent <br>
                                                     <input type="radio" name="status" value="onleave"> Onleave
                                                 </div>
                                                 <span class="text-danger error-text status_error"></span>
-                                            
+                                            </div>
+
+                                             <div class="form-row row">
+                                                <div class="col-xl-12">
+                                                    <label for="txt-time">Status:</label><br>
+                                                    <input type="radio"  name="RH"  value="1"> Regular Holiday <br>
+                                                    <input type="radio"  name="SH" value="0"> Special Holiday
+                                                </div>
+                                                
                                             </div>
                                         
                                             <div class="form-row first-row">
