@@ -80,11 +80,23 @@
                                             <option value="">--Select an option--</option>
             
                                             @foreach($employees as $option)
-                                            <option value="{{ $option->id }}">{{ $option->employee_name }}</option>
+                                              <option value="{{ $option->id }}">{{ $option->employee_name }}</option>
                                             @endforeach
             
                                             </select>
                                             <span class="text-danger error-text employee_name_error"></span>
+                                        </div>
+                                    </div>
+                                     <div class="form-row row">
+                                        <div class="col-xl-6">
+                                            <label for="txt-time">Adjustment Addition:</label>
+                                            <input type="text" name="" class="form-control">
+                                            <span class="text-danger error-text "></span>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <label for="txt-time">Adjustment Deduction:</label>
+                                            <input type="text"  name="" class="form-control">
+                                            <span class="text-danger error-text "></span>
                                         </div>
                                     </div>
                                     <div class="form-row row">

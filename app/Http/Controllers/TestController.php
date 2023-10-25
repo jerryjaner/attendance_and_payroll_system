@@ -23,7 +23,13 @@ class TestController extends Controller
 
     public function test(){
 
-       
+
+
+      return view('test');
+        $timeout = Carbon::parse('2023-10-11 22:00:00')->subHour(1);
+        $timein = Carbon::parse('2023-10-12 05:31:07');
+        $interval = $timein->diffInSeconds($timeout);
+        return $totalDuration = gmdate('H:i:s', $interval);
 
       // $datetimetoday = Carbon::now('GMT+8')->format('Y-m-d H:i:s');
       // $shed = Carbon::parse('21:00:00', 'GMT+8');

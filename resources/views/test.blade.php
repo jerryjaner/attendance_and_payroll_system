@@ -1,7 +1,52 @@
 @extends('layouts.main')
 @section('main-content')
 
-<table class="table table-striped table-hover border border-gray payroll_all" id="records" style="width:100%">
+
+ <div class="time-date " style="margin-top: 50%;">
+    <p>Manila, PH (GMT+8)</p>
+    <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
+    <div class="d-flex align-items-center justify-content-between">
+        <h6 id="dateNow" class="dateNow"></h6>
+        <p id="day" class=""></p>
+    </div>
+</div>
+ @section('page-scripts')
+<script>
+
+   document.addEventListener('DOMContentLoaded', function() {
+
+             
+
+                var dateNow = moment().format('MMM DD, YYYY');
+                var day = moment().day();
+                // var output = '';
+
+                if (day === 1) {
+                    var output = "Mon";
+                } else if (day === 2) {
+                    var output = "Tue";
+                } else if (day === 3) {
+                    var output = "Wed";
+                } else if (day === 4) {
+                    var output = "Thu";
+                } else if (day === 5) {
+                    var output = "Fri";
+                } else if (day === 6) {
+                    var output = "Sat";
+                } else  {
+                    var output = "Sun";
+                }
+
+                $('#dateNow').html(dateNow);
+                $('#day').html(output);
+
+               
+
+            });
+
+</script>
+@endsection
+{{-- <table class="table table-striped table-hover border border-gray payroll_all" id="records" style="width:100%">
     <thead>
         <tr>
             <th  class="text-center border border-gray">ID</th>
@@ -114,7 +159,7 @@
             <th  class="text-center border border-gray">Amount</th>
 
         </tr>
-    </thead>
+    </thead> --}}
     {{-- <tfoot>
         <tr>
             <th></th>
@@ -125,8 +170,8 @@
             <th></th>
         </tr>
     </tfoot> --}}
-</table>
-
+{{-- </table> --}}
+{{--  --}}
 {{-- <script>
 var options = {
     chart: {

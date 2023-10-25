@@ -65,7 +65,7 @@
                                             <div id="MyClockDisplay" class="clock" onload="showTime()"></div>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <h6 id="dateNow" class="dateNow"></h6>
-                                                <p id="day" class=""></p>
+                                                <p id="day" class="day"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -445,8 +445,13 @@
 
         <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js" rel="nofollow"></script>
      
-        
         <script>
+          
+           
+
+        </script>
+        <script>
+
              document.addEventListener('DOMContentLoaded', function() {
 
                 var calendarEl = document.getElementById('calendar-leave');
@@ -475,6 +480,29 @@
                     }
                 });
 
+        
+            });
+
+               function showTime() {
+                var options = {
+                    timeZone: 'Asia/Manila',
+                    hour12: true,
+                    hour: '2-digit',
+                    minute: '2-digit'
+                };
+
+                var time = new Date().toLocaleString('en-US', options);
+                
+                document.getElementById("MyClockDisplay").innerText = time;
+                document.getElementById("MyClockDisplay").textContent = time;
+
+                setTimeout(showTime, 1000);
+            }
+
+            showTime();
+
+
+            $(document).ready(function() {
                 var dateNow = moment().format('MMM DD, YYYY');
                 var day = moment().day();
                 // var output = '';
@@ -497,37 +525,6 @@
 
                 $('#dateNow').html(dateNow);
                 $('#day').html(output);
-
-                function showTime(){
-                    var date = new Date();
-                    date.setHours(date.getHours() + 8);// add 8 hours for Philippine time
-                    var h = date.getHours(); // 0 - 23
-                    var m = date.getMinutes(); // 0 - 59
-                    var session = "AM";
-
-                    if(h == 0){
-                        h = 12;
-                    }
-
-                    if(h > 12){
-                        h = h - 12;
-                        session = "PM";
-                    }
-
-                    h = (h < 10) ? "0" + h : h;
-                    m = (m < 10) ? "0" + m : m;
-
-                    var time = h + ":" + m  + " " + session;
-
-                    document.getElementById("MyClockDisplay").innerText = time;
-                    document.getElementById("MyClockDisplay").textContent = time;
-
-                    setTimeout(showTime, 1000);
-
-                }
-
-                showTime();
-
             });
         </script>
 
