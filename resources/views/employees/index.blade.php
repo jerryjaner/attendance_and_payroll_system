@@ -501,45 +501,25 @@
                     </div>
 
                     <div class="form-row first-row">
-                                <div class="d-flex">
-                                    <span class="section-subheader d-flex align-items-center">
-                                        <i class='bx bxs-time-five'></i>
-                                        Break Time Schedule
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="form-row row">
-                                <div class="col-xl-6">
-                                    <label for="txt-time">Start:</label>
-                                    <input type="time" name="breaktime_start" class="form-control" id="breaktime_start">
-                                    <span class="text-danger error-text breaktime_start_error"></span>
-                                </div>
-                                <div class="col-xl-6">
-                                    <label for="txt-time">End:</label>
-                                    <input type="time" name="breaktime_end" class="form-control" id="breaktime_end">
-                                    <span class="text-danger error-text breaktime_end_error"></span>
-                                </div>
-                            </div>
-                    {{-- <div class="form-row first-row">
                         <div class="d-flex">
                             <span class="section-subheader d-flex align-items-center">
-                                <i class='bx bxs-user-detail'></i>
-                                Other Information
+                                <i class='bx bxs-time-five'></i>
+                                Break Time Schedule
                             </span>
                         </div>
                     </div>
                     <div class="form-row row">
                         <div class="col-xl-6">
-                            <label for="txt-time">Date Hired:</label>
-                            <input type="date" name="date_hired" class="form-control" id="date_hired">
-                            <span class="text-danger error-text date_hired_error"></span>
+                            <label for="txt-time">Start:</label>
+                            <input type="time" name="breaktime_start" class="form-control" id="breaktime_start">
+                            <span class="text-danger error-text breaktime_start_error"></span>
                         </div>
                         <div class="col-xl-6">
-                            <label for="txt-time">Birthday:</label>
-                            <input type="date" name="employee_birthday" class="form-control" id="employee_birthday">
-                            <span class="text-danger error-text employee_birthday_error"></span>
+                            <label for="txt-time">End:</label>
+                            <input type="time" name="breaktime_end" class="form-control" id="breaktime_end">
+                            <span class="text-danger error-text breaktime_end_error"></span>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="form-row first-row">
                         <div class="d-flex">
                             <span class="section-subheader d-flex align-items-center">

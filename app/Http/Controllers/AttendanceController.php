@@ -1004,7 +1004,7 @@ class AttendanceController extends Controller
                                             }
                                             else//UNDERTIME without OT
                                             {
-                                                $timee = Carbon::createFromTime(13, 00, 00, 'GMT+8');
+                                                $timee = Carbon::createFromTime(17, 00, 00, 'GMT+8');
                                                 $timeOUT = Carbon::parse($timee)->format('H:i:s');//declared and for testing or debugging only
 
                                                 $timeee = Carbon::now('GMT+8')->format('H:i:s');
@@ -1013,7 +1013,7 @@ class AttendanceController extends Controller
 
                                                 Attendance::where('emp_no', '=', $request -> scanned)
                                                           ->where('date', '=', Carbon::now('GMT+8')->format('Y-m-d'))
-                                                          ->update(['time_out' => $timeOUT1]);
+                                                          ->update(['time_out' => $timeOUT]);
 
                                                 $attend = Attendance::where('emp_no', '=', $request -> scanned)
                                                                     ->where('date', '=', Carbon::now('GMT+8')->format('Y-m-d'))
@@ -1078,7 +1078,6 @@ class AttendanceController extends Controller
                                                             $sched_Out = Carbon::parse($attends ->employee-> sched_end);
                                                             $UTDiff = $sched_Out->diffInSeconds($attends->time_out);
                                                             $UTime = gmdate('H:i:s', $UTDiff);
-
                                                             $startTime = Carbon::parse($attends -> time_in);
                                                             $endTime = Carbon::parse($attends -> time_out);
                                                             $interval = $startTime->diffInSeconds($endTime);
@@ -1086,7 +1085,7 @@ class AttendanceController extends Controller
 
                                                             Attendance::where('emp_no', '=', $request -> scanned)->where('date', '=', Carbon::now('GMT+8')->format('Y-m-d'))
                                                                                                                     ->update(['undertime_hours'=>$UTime,
-                                                                                                                    'work_hours' => $totalDuration]);
+                                                                                                                    'work_hours' => $totalDuration,'late_hours'=>$lhours]);
 
                                                                                                                     return response()->json([
                                                                                                                         'status' => 200,
@@ -1148,10 +1147,10 @@ class AttendanceController extends Controller
                                                                 Attendance::where('emp_no', '=', $request -> scanned)->where('date', '=', Carbon::now('GMT+8')->format('Y-m-d'))
                                                                                                                         ->update(['work_hours' => $totalDuration1]);
                                                         }
-                                                                                                                return response()->json([
-                                                                                                                    'status' => 200,
-                                                                                                                    'msg' => 'Attendance updated Successfully',
-                                                                                                                ]);
+                                                        return response()->json([
+                                                            'status' => 200,
+                                                            'msg' => 'Attendance updated Successfully',
+                                                        ]);
                                                     }
                                                 }
 
