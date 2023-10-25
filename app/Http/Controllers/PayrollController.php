@@ -92,20 +92,20 @@ class PayrollController extends Controller
 
             //Rest Day work hours 
             $RD = DB::table('attendances')
-                                ->where('emp_no', '=', $request -> employee_number)
-                                ->where('RD', true)
-                                ->where('RDSH', false)
-                                ->where('RDRH', false)
-                                ->where('SH', false)
-                                ->where('RH', false)
-                                ->where('RDND', false)
-                                ->where('SHND', false)
-                                ->where('RHND', false)
-                                ->where('RDSHND', false)
-                                ->where('RDRHND', false)
-                                ->where('date', '>=', $fromdate)
-                                ->where('date', '<=', $todate)
-                                ->sum(DB::raw("TIME_TO_SEC(work_hours)")); // Calcuting the total hours and convert it to seconds
+                ->where('emp_no', '=', $request -> employee_number)
+                ->where('RD', true)
+                ->where('RDSH', false)
+                ->where('RDRH', false)
+                ->where('SH', false)
+                ->where('RH', false)
+                ->where('RDND', false)
+                ->where('SHND', false)
+                ->where('RHND', false)
+                ->where('RDSHND', false)
+                ->where('RDRHND', false)
+                ->where('date', '>=', $fromdate)
+                ->where('date', '<=', $todate)
+                ->sum(DB::raw("TIME_TO_SEC(work_hours)")); // Calcuting the total hours and convert it to seconds
             $RD_total_work_hour = gmDate("H", $RD); 
             $RD_min = gmDate("i", $RD);
 
