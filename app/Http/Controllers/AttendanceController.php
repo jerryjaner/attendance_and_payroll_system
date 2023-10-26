@@ -1009,7 +1009,7 @@ class AttendanceController extends Controller
                                             }
                                             else//UNDERTIME without OT
                                             {
-                                                $timee = Carbon::createFromTime(13, 00, 00, 'GMT+8');
+                                                $timee = Carbon::createFromTime(17, 00, 00, 'GMT+8');
                                                 $timeOUT = Carbon::parse($timee)->format('H:i:s');//declared and for testing or debugging only
 
                                                 $timeee = Carbon::now('GMT+8')->format('H:i:s');
@@ -1085,7 +1085,6 @@ class AttendanceController extends Controller
                                                             $sched_Out = Carbon::parse($attends ->employee-> sched_end);
                                                             $UTDiff = $sched_Out->diffInSeconds($attends->time_out);
                                                             $UTime = gmdate('H:i:s', $UTDiff);
-
                                                             $startTime = Carbon::parse($attends -> time_in);
                                                             $endTime = Carbon::parse($attends -> time_out);
                                                             $interval = $startTime->diffInSeconds($endTime);

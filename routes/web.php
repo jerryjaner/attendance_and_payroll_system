@@ -52,8 +52,12 @@ Auth::routes();
     Route::get('/employee_bday', [DashboardController::class, 'employee_bday'])->name('employee_bday');
 
     // AccountController
-    Route::get('/account', [AccountController::class, 'index'])->name('account');
+    //Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::post('/update_password', [AccountController::class, 'update_password']);
+    Route::get('/account', [AccountController::class, 'index'])->name('account');
+    Route::get('/view-payslip1', [AccountController::class, 'view_payslip1'])->name('view_payslip1');
+    Route::get('/employee-payroll1', [AccountController::class, 'get_all_payroll1'])->name('get_payroll1');
+    Route::get('/edit-employees1', [AccountController::class, 'edit_employee1'])->name('edit_employee1');
 
     // Attendance
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance');
@@ -216,12 +220,9 @@ Auth::routes();
 
 
 //For the test or Trial and Error and Testing of Query
-Route::get('/test', [TestController::class, 'test'])->name('test');
-Route::get('/test2', [TestController::class, 'test2'])->name('test2');
-Route::get('/employeesp', [TestController::class, 'indexq'])->name('indexq');
-
-
-
-
-
-
+// Route::get('/test', [TestController::class, 'test'])->name('test');
+// Route::get('/view-payslip1', [TestController::class, 'view_payslip1'])->name('view_payslip1');
+// Route::get('/employee-payroll1', [TestController::class, 'get_all_payroll1'])->name('get_payroll1');
+// Route::get('/edit-employees1', [TestController::class, 'edit_employee1'])->name('edit_employee1');
+//Route::post('/update1', [TestController::class, 'update1'])->name('update1');
+//Route::post('/update_password1', [AccountController::class, 'update_password1']);

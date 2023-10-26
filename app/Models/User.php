@@ -60,5 +60,8 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class);
     }
 
-    
+    public function payroll()
+    {
+        return $this->hasOne(Payroll::class);
+    }
 }

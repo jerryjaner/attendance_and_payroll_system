@@ -51,4 +51,9 @@ class Payroll extends Model
     public function employee(){
         return $this->belongsTo(Employee::class,  'employee_number', 'employee_no')->withDefault();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

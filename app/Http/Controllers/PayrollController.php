@@ -859,7 +859,6 @@ class PayrollController extends Controller
     public function view_payslip(Request $request){
 
         $view_payslip = Payroll::with('employee')->find($request -> id);
-
 		return response()->json($view_payslip);
     }
 
