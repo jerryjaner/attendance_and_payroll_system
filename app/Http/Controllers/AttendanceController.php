@@ -61,9 +61,7 @@ class AttendanceController extends Controller
 
 
 
-        // $Employee_time_in_AM = "08:00:00";
-        // $Employee_time_out_PM = "17:00:00";
-        // $Employee_time_out = "16:59:00";
+       
 
 		$output = '';
 		if ($attendance_todays ->count() > 0) {
