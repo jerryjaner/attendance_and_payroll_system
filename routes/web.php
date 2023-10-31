@@ -220,7 +220,7 @@ Auth::routes();
 
 
 //For the test or Trial and Error and Testing of Query
-// Route::get('/test', [TestController::class, 'test'])->name('test');
+Route::get('/test', [TestController::class, 'test'])->name('test');
 // Route::get('/view-payslip1', [TestController::class, 'view_payslip1'])->name('view_payslip1');
 // Route::get('/employee-payroll1', [TestController::class, 'get_all_payroll1'])->name('get_payroll1');
 // Route::get('/edit-employees1', [TestController::class, 'edit_employee1'])->name('edit_employee1');

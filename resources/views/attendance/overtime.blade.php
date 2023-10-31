@@ -147,7 +147,7 @@
                         <i class='bx bx-edit section-icon'></i>
                         <h5 class="section-header">HR Approval</h5>
                     </div>
-                    <input type="hidden" name="hr_id" id="hr_id">
+                    <input type="text" name="hr_id" id="hr_id">
            
 
                     <h5 class="text-center mt-4">Do you really want to accept this request?</h5>
@@ -556,7 +556,8 @@
         
 
         // HR Approve Request
-        $(document).on('click', '.approve_hr', function(e) {
+        $(document).on('click', '.approve_hr', function(e) 
+        {
                 e.preventDefault();
                 let id = $(this).attr('id');
             $.ajax({
